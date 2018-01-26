@@ -21,14 +21,17 @@ public class UpController {
     }
 
     //处理文件上传
-    @RequestMapping(value="/testuploadimg", method = RequestMethod.POST)
+    @RequestMapping(value="/upfile", method = RequestMethod.POST)
     @ResponseBody
     public String uploadImg(@RequestParam("file") MultipartFile file,
                      HttpServletRequest request) {
+        if(file.isEmpty()){
+            return "文件为空";
+        }
         String contentType = file.getContentType();
         String fileName = file.getOriginalFilename();
         //String filePath = request.getSession().getServletContext().getRealPath("imgupload/");
-        String filePath = "D:\\IdeaProjects\\spring-boot-filghting\\src\\main\\resources\\up\\";
+        String filePath = "./src/main/resources/up/";
         System.out.println(filePath);
         try {
             File targetFile = new File(filePath);
@@ -40,9 +43,10 @@ public class UpController {
             out.flush();
             out.close();
         } catch (Exception e) {
-            // TODO: handle exception
+            e.printStackTrace();
+            return "上传失败";
         }
         //返回json
-        return "uploadimg success";
+        return "上传成功";
     }
 }
