@@ -5,7 +5,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +13,11 @@ import java.io.FileOutputStream;
 
 @Controller
 public class UpController {
+    /*public static int First=0;
+    public static int Second=0;
+    public static int Third=0;*/
+
+
 
     @RequestMapping("/")
     public String index(Model model) {
@@ -22,9 +26,14 @@ public class UpController {
 
     //处理文件上传
     @RequestMapping(value="/upfile", method = RequestMethod.POST)
-    @ResponseBody
-    public String uploadImg(@RequestParam("file") MultipartFile file,
+    public String uploadImg(@RequestParam("file") MultipartFile file,/*@RequestParam("first") int first,
+                            @RequestParam("second") int second,@RequestParam("third") int third,*/
                      HttpServletRequest request) {
+        //将参数放入静态变量中
+        /*UpController.First=first;
+        UpController.Second=second;
+        UpController.Third=third;*/
+
         if(file.isEmpty()){
             return "文件为空";
         }
@@ -47,6 +56,6 @@ public class UpController {
             return "上传失败";
         }
         //返回json
-        return "上传成功";
+        return "finish";
     }
 }

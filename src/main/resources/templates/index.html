@@ -1,12 +1,37 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8" />
-    <title>抢红包</title>
+    <title>Test20</title>
+    <link th:href="@{bootstrap/css/bootstrap.min.css}" rel="stylesheet" />
+    <link th:href="@{bootstrap/css/bootstrap-theme.min.css}" rel="stylesheet" />
+    <style type="text/css">
+        .form-control{
+            width: 300px;
+        }
+        .form-horizontal{
+            margin-left: 400px;
+            margin-top: 50px;
+        }
+       p{
+            margin-left: 400px;
+            margin-top: 200px;
+        }
+    </style>
 </head>
 <body>
-<form enctype="multipart/form-data" method="post" action="/upfile">
-    <input type="file" name="file"/>
-    <input type="submit" value="上传"/>
+<p>请上传后缀名为.xls的文件，人名写在表格的第一列，其中第一列第一行空</p>
+<form class="form-horizontal" enctype="multipart/form-data" method="post" action="/upfile">
+    <div class="form-group">
+        <label for="inputEmail3" class="col-sm-2 control-label" >文件</label>
+        <div class="col-sm-10">
+            <input type="file" class="form-control" id="inputEmail3" name="file" />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <input style="width: 200px" class="btn btn-primary" type="submit" value="上传"/>
+        </div>
+    </div>
 </form>
 </body>
 </html>

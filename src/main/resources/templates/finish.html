@@ -1,17 +1,176 @@
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+﻿<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8" />
-    <title>抢红包</title>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<title>商富年会抽奖</title>
+<style>
+*{margin:0;padding:0;}
+img{display:block;}
+i{font-style:normal;}
+.vetically{justify-content:center;align-items:center;display:-webkit-flex;}
+.prize_con{position: absolute;width: 100%;height: 100%;background: url(nian/images/firstp_bg.jpg) no-repeat left top / 100% 100%;overflow: hidden;}
+.prize_grade{font-size:98px;color: #ffe9af;text-align: center;margin: 60px auto 0;}
+.prize_list{width:55%;height:230px;margin: 20px auto 55px;text-align: center;overflow: hidden;}
+.prize_list ul{width:100%;font-size:0;}
+.prize_list li{display:inline-block;font-size:50px;color:#f1bf90;text-align: center;width:100%;line-height:100px;font-family:Arial;margin-bottom: 30px;}
+.start{width: 250px;height: 90px;margin:0 auto;cursor:pointer;}
+.prize_set{position: absolute;right: 60px;bottom:140px;font-size: 16px;color: #f7f3e8;line-height: 30px;}
+.prize_set li{display: inline-block;margin-left: 20px;}
+.set_grade select,.set_people input, .set_money input{background: #fff;width:110px;height:36px;border:1px solid #8f0000;margin-left: .1rem;color: #000;padding-left:10px;}
+</style>
+
 </head>
-<body>
-一等奖：<div>
-    <ul>
-        <li th:each="list_1:${first}">
-            <span></span>
-        </li>
-    </ul>
+<body >
+<!-- 代码 开始 -->
+<div class="wrap">
+  <div class="prize_con">
+      <p class="prize_grade"><span>一等奖</span> <i>0</i>人</p>
+        <div class="prize_list vetically">
+          <ul>
+            <li></li>
+          <!--  <li>000000</li>
+            <li>000000</li>
+            <li>000000</li>
+            <li>000000</li>
+            <li>000000</li>
+            <li>000000</li>
+            <li>000000</li>
+            <li>000000</li>
+            <li>000000</li>-->
+          </ul>
+        </div>
+      <p class="start"><img th:src="@{nian/images/prize_start.png}" alt=""/></p>
+      <ul class="prize_set">
+          <li class="set_grade">奖等
+            <select id="set_grade">
+              <option>一等奖</option>
+              <option>二等奖</option>
+              <option>三等奖</option>
+            </select>
+          </li>
+          <li class="set_people">人数<input type="tel" placeholder="输入中奖人数" id="prizeCount"/></li>
+<!--
+          <li class="set_money">金额<input type="tel" placeholder="输入中奖金额" id="prizeMoney"/></li>
+-->
+      </ul>
+  </div>
 </div>
-二等奖：<div>2</div>
-三等奖：<div>3</div>
+<input type="hidden" value="0" id="prize_btn"/>
+
+
+<script th:src="@{jquery-1.10.2.min.js}"></script>
+<script th:inline="javascript">
+    //
+    /* <![CDATA[ */
+    //
+  var myNumber;
+  var arr = [];
+  // var code = [302610,210022,159862,158602,145635,856997,586223,546221,145213,987451,251364,854136,581698,123785,521387,752169,718954,412321,898989,121245,788565,458558,589659,455212,964632,458412,223344,112233,335566,778899];
+  var code = ['陈宏子','秦婷婷','折蓉蓉','曹丽娜','李娜','姜钰','魏天霞','王官君','王红梅','郭淑慧','马海娟','孙洪山','胡丹丹','倪辰曦','胡书琴','冷静','李剑','范志坚','任娟娟','何圆','安瑞娟','汤敏树'];
+  /*随机所有的code并且不重复*/
+  function showRandomNum(num) {
+    var li = "";
+    for(var i = 0; i < code.length; i++){
+      arr[i] = i;
+    }
+    arr.sort(function(){
+      return 0.5 - Math.random();
+    });
+
+    for(var i = 0; i < num; i++){
+      var index = arr[i];
+      li += '<li>'+code[index]+'</li>';
+    }
+
+    $(".prize_list ul").html(li);
+  }
+  var count = 1;//计数器
+  $(function () {
+        $(".start").click(function(){
+      if($("#prize_btn").val() == 0){        
+        if($("#set_grade").val() == "选择奖等") {
+            alert("请选择奖等");
+            return;
+        }else if($("#prizeCount").val() == "") {
+            alert("请输入中奖人数");
+            return;
+        }else{
+          $("#prize_btn").val(1);
+          var num = $("#prizeCount").val();
+          $(this).find("img").attr("src","nian/images/prize_stop.png");
+
+          myNumber = setInterval(function(){
+            showRandomNum(1);
+          }, 30);
+        }        
+      }else{
+        $("#prize_btn").val(0);
+        clearInterval(myNumber);
+        $(this).find("img").attr("src","nian/images/prize_start.png");
+        console.log(count);
+        if(count == 1){
+            $.ajax({
+                //提交数据的类型 POST GET
+                type:"GET",
+                //提交的网址
+                url:"/RedPacket/getRedPacket",
+                //提交的数据
+                data:{count:$("#prizeCount").val()},
+                //返回数据的格式
+                datatype: "json",
+                //成功返回之后调用的函数
+                success:function (data){
+                    $(".prize_list ul").html('<li>'+data+'</li>');
+                },
+                //调用出错执行的函数
+                error: function(error){
+                    aler("ajax error : "+error);
+                }
+            });
+            count = 2;
+        }else{
+            console.log(count);
+
+            $.ajax({
+                //提交数据的类型 POST GET
+                type:"GET",
+                //提交的网址
+                url:"/RedPacket/get",
+                //提交的数据
+                data:{count:$("#prizeCount").val()},
+                //返回数据的格式
+                datatype: "json",
+                //成功返回之后调用的函数
+                success:function (data){
+                    $(".prize_list ul").html('<li>'+data+'</li>');
+                },
+                //调用出错执行的函数
+                error: function(error){
+                    aler("ajax error : "+error);
+                }
+            });
+        }
+
+      }      
+    });
+
+    //回车键控制开始和停止
+    $(document).keydown(function (event) {
+        var e = event || window.event || arguments.callee.caller.arguments[0];
+        if (e && e.keyCode == 13) { // enter 键
+            $(".start").click();
+        }
+    });
+
+    $("#set_grade").change(function(){
+      $(".prize_grade span").text($(this).val());
+    });
+
+    $("#prizeCount").keyup(function(){
+      $(".prize_grade i").text($(this).val());
+    });
+});
+    /* ]]> */
+</script>
 </body>
 </html>
